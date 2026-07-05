@@ -177,3 +177,34 @@ def test_price_setter_negative_value(
 
     assert product.price == 180000.0
     assert "Цена не должна быть нулевая или отрицательная" in captured.out
+
+
+def test_product_str(product: Product) -> None:
+    """Тестирует строковое представление товара."""
+    assert str(product) == (
+        "Samsung Galaxy S23 Ultra, 180000.0 руб. Остаток: 5 шт."
+    )
+
+
+def test_category_str(
+    product: Product,
+    second_product: Product,
+) -> None:
+    """Тестирует строковое представление категории."""
+    category = Category(
+        name="Смартфоны",
+        description="Смартфоны, как средство коммуникации",
+        products=[product, second_product],
+    )
+
+    assert str(category) == "Смартфоны, количество продуктов: 13 шт."
+
+
+def test_product_add(
+    product: Product,
+    second_product: Product,
+) -> None:
+    """Тестирует сложение товаров."""
+    result = product + second_product
+
+    assert result == 2580000.0
