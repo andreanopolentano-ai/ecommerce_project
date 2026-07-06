@@ -1,5 +1,9 @@
-class Product:
-    """Класс для описания товара."""
+from abc import ABC, abstractmethod
+from typing import Any
+
+
+class BaseProduct(ABC):
+    """Абстрактный базовый класс для продуктов."""
 
     name: str
     description: str
@@ -12,7 +16,7 @@ class Product:
         price: float,
         quantity: int,
     ) -> None:
-        """Инициализирует объект товара."""
+        """Инициализирует базовые атрибуты продукта."""
         self.name = name
         self.description = description
         self.__price = price
@@ -33,7 +37,41 @@ class Product:
         self.__price = new_price
 
     @classmethod
-    def new_product(cls, product: dict) -> "Product":
+    @abstractmethod
+    def new_product(cls, product: dict[str, Any]) -> "BaseProduct":
+        """Создает новый товар из словаря."""
+
+    @abstractmethod
+    def __str__(self) -> str:
+        """Возвращает строковое представление товара."""
+
+    @abstractmethod
+    def __add__(self, other: "BaseProduct") -> float:
+        """Складывает товары."""
+
+
+class PrintMixin:
+    """Миксин для вывода информации о создании объекта."""
+
+    def __init__(self, *args: Any, **kwargs: Any) -> None:
+        """Инициализирует объект и выводит информацию о нем."""
+        super().__init__(*args, **kwargs)
+        print(repr(self))
+
+    def __repr__(self) -> str:
+        """Возвращает техническое представление объекта."""
+        return (
+            f"{self.__class__.__name__}("
+            f"{self.name!r}, {self.description!r}, "
+            f"{self.price!r}, {self.quantity!r})"
+        )
+
+
+class Product(PrintMixin, BaseProduct):
+    """Класс для описания товара."""
+
+    @classmethod
+    def new_product(cls, product: dict[str, Any]) -> "Product":
         """Создает новый товар из словаря."""
         return cls(
             name=product["name"],
@@ -46,7 +84,7 @@ class Product:
         """Возвращает строковое представление товара."""
         return f"{self.name}, {self.price} руб. Остаток: {self.quantity} шт."
 
-    def __add__(self, other: "Product") -> float:
+    def __add__(self, other: BaseProduct) -> float:
         """Возвращает общую стоимость товаров одного класса."""
         if type(self) is not type(other):
             raise TypeError("Складывать можно только товары одного класса")
