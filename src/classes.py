@@ -47,8 +47,62 @@ class Product:
         return f"{self.name}, {self.price} руб. Остаток: {self.quantity} шт."
 
     def __add__(self, other: "Product") -> float:
-        """Возвращает общую стоимость двух товаров на складе."""
+        """Возвращает общую стоимость товаров одного класса."""
+        if type(self) is not type(other):
+            raise TypeError("Складывать можно только товары одного класса")
+
         return self.price * self.quantity + other.price * other.quantity
+
+
+class Smartphone(Product):
+    """Класс для описания смартфона."""
+
+    efficiency: float
+    model: str
+    memory: int
+    color: str
+
+    def __init__(
+        self,
+        name: str,
+        description: str,
+        price: float,
+        quantity: int,
+        efficiency: float,
+        model: str,
+        memory: int,
+        color: str,
+    ) -> None:
+        """Инициализирует объект смартфона."""
+        super().__init__(name, description, price, quantity)
+        self.efficiency = efficiency
+        self.model = model
+        self.memory = memory
+        self.color = color
+
+
+class LawnGrass(Product):
+    """Класс для описания газонной травы."""
+
+    country: str
+    germination_period: str
+    color: str
+
+    def __init__(
+        self,
+        name: str,
+        description: str,
+        price: float,
+        quantity: int,
+        country: str,
+        germination_period: str,
+        color: str,
+    ) -> None:
+        """Инициализирует объект газонной травы."""
+        super().__init__(name, description, price, quantity)
+        self.country = country
+        self.germination_period = germination_period
+        self.color = color
 
 
 class Category:
@@ -75,7 +129,10 @@ class Category:
         Category.product_count += len(products)
 
     def add_product(self, product: Product) -> None:
-        """Добавляет товар в категорию."""
+        """Добавляет товар или наследника товара в категорию."""
+        if not isinstance(product, Product):
+            raise TypeError("Можно добавлять только объекты класса Product")
+
         self.__products.append(product)
         Category.product_count += 1
 
