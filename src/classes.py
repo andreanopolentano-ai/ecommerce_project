@@ -9,6 +9,7 @@ class BaseProduct(ABC):
     description: str
     quantity: int
 
+    @abstractmethod
     def __init__(
         self,
         name: str,
@@ -69,6 +70,16 @@ class PrintMixin:
 
 class Product(PrintMixin, BaseProduct):
     """Класс для описания товара."""
+
+    def __init__(
+        self,
+        name: str,
+        description: str,
+        price: float,
+        quantity: int,
+    ) -> None:
+        """Инициализирует объект товара."""
+        super().__init__(name, description, price, quantity)
 
     @classmethod
     def new_product(cls, product: dict[str, Any]) -> "Product":

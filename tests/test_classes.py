@@ -1,3 +1,8 @@
+import pytest
+
+from src.classes import BaseProduct, LawnGrass, Product, Smartphone
+
+
 def test_base_product_is_abstract() -> None:
     """Тестирует, что BaseProduct нельзя создать напрямую."""
     with pytest.raises(TypeError):
