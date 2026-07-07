@@ -18,6 +18,9 @@ class BaseProduct(ABC):
         quantity: int,
     ) -> None:
         """Инициализирует базовые атрибуты продукта."""
+        if quantity == 0:
+            raise ValueError("Товар с нулевым количеством не может быть добавлен")
+
         self.name = name
         self.description = description
         self.__price = price
@@ -203,3 +206,15 @@ class Category:
             total_quantity += product.quantity
 
         return f"{self.name}, количество продуктов: {total_quantity} шт."
+
+    def average_price(self) -> float:
+        """Возвращает среднюю цену всех товаров категории."""
+        try:
+            total_price = sum(product.price for product in self.__products)
+            return total_price / len(self.__products)
+        except ZeroDivisionError:
+            return 0
+
+    def middle_price(self) -> float:
+        """Возвращает среднюю цену всех товаров категории."""
+        return self.average_price()
